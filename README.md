@@ -196,7 +196,7 @@ erDiagram
 pip install flask pyodbc
 ```
 
-1. SSMS'te `eticaret_sql_betikleri.sql` dosyasını baştan sona çalıştırın (CREATE DATABASE dahil)
+1. SSMS'te `grupno133_sql_betikleri.sql` dosyasını baştan sona çalıştırın (CREATE DATABASE dahil)
 2. `eticaret/` klasöründe `python app.py` çalıştırın
 3. Tarayıcıda `http://127.0.0.1:5000` adresini açın
 
