@@ -35,27 +35,17 @@ Bir e-ticaret platformunun temel iş süreçlerini yönetecek ilişkisel bir ver
 
 ```mermaid
 flowchart TD
-    A([👤 Müşteri]) --> B[Ürün Listesi\nKategori / Arama Filtresi]
-    B --> C{Varyant\nVar mı?}
-    C -- Evet --> D[Beden / Renk Seç]
-    C -- Hayır --> E[Adet Gir]
+    A([Kullanıcı]) --> B[Ürün Listeleme\nKategori Filtresi / Arama]
+    B --> C{Üründe Varyant\nTanımlı mı?}
+    C -- Evet --> D[Varyant Seçimi\nBeden / Renk / Tür]
+    C -- Hayır --> E[Adet Girişi]
     D --> E
-    E --> F{Stok\nYeterli?}
-    F -- Hayır --> G[❌ Uyarı Göster]
-    F -- Evet --> H[INSERT Siparis]
-    H --> I[INSERT SiparisDetay]
-    I --> J{{trg_StokDus}}
-    J --> K[Genel Stok ↓\nVaryant Stok ↓]
-    K --> L{Durum\nGüncelleme}
-    L -- Hazırlanıyor → Kargoda --> M[🚚 Kargoda]
-    M -- Kargoda → Teslim --> N[✅ Teslim]
-    L -- İptal --> O{{trg_IptalStokGeri}}
-    O --> P[❌ İptal\nStok İade ↑]
-    N --> Q[📊 Raporlama]
-    Q --> R[[sp_SatisRaporu]]
-    Q --> S[[sp_SepetToplami]]
-    Q --> T[[vw_SatisDetaylari]]
-```
+    E --> F{Stok\nYeterli mi?}
+    F -- Hayır --> G[Hata Mesajı\nYetersiz Stok]
+    F -- Evet --> H[INSERT INTO Siparis]
+    H --> I[INSERT INTO SiparisDetay]
+    I --> J[[Trigger: trg_StokDus]]
+    J --> K
 
 ---
 
