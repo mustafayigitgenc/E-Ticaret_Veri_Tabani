@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart" style="margin-bottom:18px;">
+  <h2>Sipariş #{{ siparis.SiparisID }} Detayı</h2>
+  <div style="display:flex;gap:24px;margin-top:-8px;flex-wrap:wrap;">
+    <span style="font-size:13px;color:var(--text-muted);">👤 {{ musteri }}</span>
+    <span style="font-size:13px;color:var(--text-muted);">📅 {{ siparis.SiparisTarihi }}</span>
+    <span>
+      {% if siparis.Durum == 'Teslim' %}<span class="durum durum-teslim">✅ Teslim</span>
+      {% elif siparis.Durum == 'Kargoda' %}<span class="durum durum-kargoda">🚚 Kargoda</span>
+      {% elif siparis.Durum == 'Hazirlaniyor' %}<span class="durum durum-hazirlaniyor">⏳ Hazırlanıyor</span>
+      {% else %}<span class="durum durum-iptal">❌ İptal</span>{% endif %}
+    </span>
+  </div>
+</div>
+
+<div class="kart" style="margin-bottom:18px;">
+  <h2>Ürünler</h2>
+  <table>
+    <thead><tr><th>Ürün</th><th>Seçenek</th><th>Adet</th><th>Birim Fiyat</th><th>Satır Tutar</th></tr></thead>
+    <tbody>
+      {% for d in detaylar %}
+      <tr>
+        <td><b>{{ d.Urun }}</b></td>
+        <td style="color:var(--text-muted);font-size:12px;">{{ d.Varyant if d.Varyant else '—' }}</td>
+        <td>{{ d.Adet }}</td>
+        <td>{{ d.BirimFiyat }} ₺</td>
+        <td><b>{{ d.SatirTutar }} ₺</b></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- sp_SepetToplami procedure sonucu -->
+  <div style="margin-top:18px;padding:16px 20px;background:var(--surface2);border-radius:10px;
+              border:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+    <span style="font-size:13px;color:var(--text-muted);">
+      Toplam tutar <b style="color:var(--text);">sp_SepetToplami</b> procedure'ından hesaplandı
+    </span>
+    <span style="font-size:24px;font-weight:800;color:var(--accent);">{{ "%.2f"|format(toplam_tutar) }} ₺</span>
+  </div>
+</div>
+
+<a href="/siparis-ozeti" class="btn-ikincil">← Sipariş Özetine Dön</a>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="magaza-detay-header">
+  <div>
+    <h2>🏪 {{ magaza.Ad }}</h2>
+    <p style="color:#aaa;margin-top:6px;font-size:14px;">📍 {{ magaza.Sehir }}</p>
+    <div style="margin-top:10px;">
+      <span style="color:#f4a261;font-size:20px;">{{ '★' * (magaza.Puan|int) }}{{ '☆' * (5 - magaza.Puan|int) }}</span>
+      <span style="color:#aaa;font-size:14px;margin-left:8px;">{{ magaza.Puan }} / 5.0</span>
+    </div>
+  </div>
+  <div class="magaza-istatistik">
+    <div class="stat">
+      <div class="deger">{{ urunler|length }}</div>
+      <div class="ad">Ürün</div>
+    </div>
+    <div class="stat">
+      <div class="deger">{{ yorum_sayisi }}</div>
+      <div class="ad">Yorum</div>
+    </div>
+    <div class="stat">
+      <div class="deger">{{ "%.1f"|format(ort_puan) if ort_puan else '-' }}</div>
+      <div class="ad">Ort. Puan</div>
+    </div>
+  </div>
+</div>
+
+<div class="kart">
+  <h2>Bu Mağazanın Ürünleri</h2>
+  {% if urunler %}
+  <div class="urun-grid">
+    {% for u in urunler %}
+    <div class="urun-kart">
+      <img src="{{ u.GorselURL }}" alt="{{ u.Ad }}">
+      <div class="urun-kart-bilgi">
+        <span class="badge badge-kategori">{{ u.Kategori }}</span>
+        <h3>{{ u.Ad }}</h3>
+        <div class="fiyat">{{ u.Fiyat }} ₺</div>
+        <div class="stok-bilgi {% if u.StokAdedi < 10 %}az{% endif %}">
+          {% if u.StokAdedi < 10 %}⚠️ {% endif %}Stok: {{ u.StokAdedi }}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p style="color:#999;">Bu mağazaya ait ürün bulunamadı.</p>
+  {% endif %}
+</div>
+
+<div style="margin-top:16px;">
+  <a href="/magazalar" class="btn-ikincil">← Mağazalara Dön</a>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart">
+  <h2>Mağazalar</h2>
+  <div class="magaza-grid">
+    {% for m in magazalar %}
+    <a class="magaza-kart" href="/magaza/{{ m.MagazaID }}">
+      <h3>{{ m.Ad }}</h3>
+      <p class="sehir">📍 {{ m.Sehir }}</p>
+      <div class="yildiz">{{ '★' * (m.Puan|int) }}{{ '☆' * (5 - m.Puan|int) }}</div>
+      <div class="puan-bilgi">{{ m.Puan }} / 5.0 puan</div>
+      <span class="urun-sayisi">🛍️ {{ m.UrunSayisi }} ürün</span>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

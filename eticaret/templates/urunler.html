@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+    <h2 style="margin:0;">Ürünler <span style="font-size:13px;font-weight:400;color:var(--text-muted);">({{ urunler|length }} ürün)</span></h2>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <form method="get" style="display:flex;gap:8px;align-items:center;">
+        <select name="kategori" onchange="this.form.submit()"
+                style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;background:var(--surface);color:var(--text);">
+          <option value="">— Tüm Kategoriler —</option>
+          {% for k in kategoriler %}
+          <option value="{{ k.KategoriID }}" {% if secili_kategori == k.KategoriID|string %}selected{% endif %}>{{ k.Ad }}</option>
+          {% endfor %}
+        </select>
+        {% if secili_kategori %}<a href="/urunler" style="font-size:12px;color:var(--accent);text-decoration:none;">✕ Temizle</a>{% endif %}
+      </form>
+      <a href="/urun-ekle" class="btn" style="font-size:13px;padding:8px 18px;">+ Ürün Ekle</a>
+    </div>
+  </div>
+
+  {% if request.args.get('hata') == 'siparis' %}
+  <div class="uyari">Bu ürünün aktif siparişleri var — silinemez.</div>
+  {% endif %}
+
+  <div class="urun-grid">
+    {% for u in urunler %}
+    <div class="urun-kart">
+      <button class="sil-btn" onclick="if(confirm('{{ u.Ad }} silinsin mi?')) window.location='/urun-sil/{{ u.UrunID }}'" title="Sil">×</button>
+      <img src="{{ u.GorselURL }}" alt="{{ u.Ad }}">
+      <div class="urun-kart-bilgi">
+        <span class="badge badge-kategori">{{ u.Kategori }}</span>
+        <span class="badge badge-magaza">{{ u.Magaza }}</span>
+        <h3>{{ u.Ad }}</h3>
+        <div class="fiyat">{{ u.Fiyat }} ₺</div>
+        <div class="stok-bilgi {% if u.StokAdedi < 10 %}az{% endif %}">
+          {% if u.StokAdedi < 10 %}⚠️ {% endif %}Stok: {{ u.StokAdedi }}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

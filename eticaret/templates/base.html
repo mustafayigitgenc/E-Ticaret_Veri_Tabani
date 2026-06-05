@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>miyshop — Admin</title>
+  <style>
+    :root {
+      --bg:#f0f2f5; --surface:#fff; --surface2:#f8f9fc; --text:#1a1a2e;
+      --text-muted:#888; --border:#ebebeb; --accent:#e94560; --accent-hover:#c73750;
+      --sidebar-bg:#16213e; --sidebar-text:#8892b0; --sidebar-hover:#1e2d5a;
+      --topbar-bg:#1a1a2e; --shadow:0 2px 12px rgba(0,0,0,0.08);
+      --shadow-hover:0 8px 24px rgba(0,0,0,0.14); --badge-k-bg:#fdecea;
+      --badge-k-text:#e94560; --badge-m-bg:#e8ecf7; --badge-m-text:#1a1a2e;
+      --th-bg:#f8f9fc; --th-text:#555;
+    }
+    [data-theme="dark"] {
+      --bg:#0d1117; --surface:#161b22; --surface2:#21262d; --text:#c9d1d9;
+      --text-muted:#8b949e; --border:#30363d; --accent:#e94560;
+      --sidebar-bg:#010409; --sidebar-text:#8b949e; --sidebar-hover:#161b22;
+      --topbar-bg:#161b22; --shadow:0 2px 12px rgba(0,0,0,0.4);
+      --shadow-hover:0 8px 28px rgba(0,0,0,0.5); --badge-k-bg:rgba(233,69,96,0.15);
+      --badge-k-text:#e94560; --badge-m-bg:rgba(255,255,255,0.08);
+      --badge-m-text:#c9d1d9; --th-bg:#21262d; --th-text:#8b949e;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);transition:background .25s,color .25s;}
+    .topbar{position:fixed;top:0;left:0;right:0;height:56px;background:var(--topbar-bg);
+      display:flex;align-items:center;gap:14px;padding:0 20px;z-index:200;
+      border-bottom:1px solid rgba(255,255,255,0.06);}
+    .logo{font-size:20px;font-weight:800;color:#fff;text-decoration:none;white-space:nowrap;flex-shrink:0;}
+    .logo .y{color:var(--accent);} .logo .shop{color:#ccc;font-weight:400;font-size:17px;}
+    .arama-form{flex:1;max-width:340px;}
+    .arama-form input{width:100%;padding:7px 16px;border-radius:20px;border:none;
+      background:rgba(255,255,255,0.1);color:#fff;font-size:13px;outline:none;transition:background .2s;}
+    .arama-form input::placeholder{color:rgba(255,255,255,0.4);}
+    .arama-form input:focus{background:rgba(255,255,255,0.18);}
+    .topbar-sag{margin-left:auto;display:flex;align-items:center;gap:10px;}
+    .tema-btn{background:rgba(255,255,255,0.08);border:none;color:#ccc;width:36px;height:36px;
+      border-radius:8px;font-size:16px;cursor:pointer;transition:background .2s;
+      display:flex;align-items:center;justify-content:center;}
+    .tema-btn:hover{background:rgba(255,255,255,0.15);}
+    .sidebar{position:fixed;top:56px;left:0;width:220px;bottom:0;background:var(--sidebar-bg);
+      display:flex;flex-direction:column;z-index:100;transition:background .25s;
+      border-right:1px solid rgba(255,255,255,0.04);}
+    .sidebar-menu{flex:1;overflow-y:auto;padding:8px 0;}
+    .menu-baslik{padding:14px 16px 5px;font-size:10px;font-weight:700;letter-spacing:1.5px;
+      color:#3d4e6e;text-transform:uppercase;user-select:none;}
+    .sidebar a{display:flex;align-items:center;gap:10px;padding:9px 16px;
+      color:var(--sidebar-text);text-decoration:none;font-size:13px;
+      transition:all .15s;border-left:3px solid transparent;}
+    .sidebar a:hover{background:var(--sidebar-hover);color:#e6edf3;border-left-color:var(--accent);}
+    .sidebar a.aktif{background:var(--sidebar-hover);color:#fff;border-left-color:var(--accent);}
+    .ikon{font-size:14px;width:18px;text-align:center;opacity:.85;}
+    .ayrac{height:1px;background:rgba(255,255,255,0.05);margin:5px 12px;}
+    .sidebar-alt{padding:12px 16px;border-top:1px solid rgba(255,255,255,0.05);font-size:11px;color:#3d4e6e;}
+    .page-wrap{margin-top:56px;margin-left:220px;min-height:calc(100vh - 56px);padding:24px;}
+    .kart{background:var(--surface);border-radius:14px;padding:24px 28px;
+      box-shadow:var(--shadow);border:1px solid var(--border);transition:background .25s,border-color .25s;}
+    h2{font-size:17px;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px;font-weight:700;}
+    h2::before{content:'';display:inline-block;width:4px;height:20px;background:var(--accent);border-radius:4px;flex-shrink:0;}
+    .ozet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:24px;}
+    .ozet-kart{background:var(--surface);border-radius:12px;padding:17px 18px;box-shadow:var(--shadow);
+      border:1px solid var(--border);transition:background .25s,transform .2s;}
+    .ozet-kart:hover{transform:translateY(-2px);}
+    .ozet-kart .sayi{font-size:25px;font-weight:800;color:var(--text);margin-bottom:4px;}
+    .ozet-kart .etiket{font-size:11px;color:var(--text-muted);}
+    table{width:100%;border-collapse:collapse;}
+    th{background:var(--th-bg);color:var(--th-text);padding:10px 12px;text-align:left;
+      font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+      border-bottom:2px solid var(--border);transition:background .25s;}
+    td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text);}
+    tbody tr{transition:background .12s;} tbody tr:hover td{background:var(--surface2);}
+    tbody tr:last-child td{border-bottom:none;}
+    .form-grup{margin-bottom:14px;}
+    .form-grup label{display:block;font-size:11px;font-weight:700;color:var(--text-muted);
+      margin-bottom:5px;letter-spacing:.4px;text-transform:uppercase;}
+    .form-grup select,.form-grup input,.form-grup textarea{
+      width:100%;max-width:420px;padding:9px 12px;border:1.5px solid var(--border);
+      border-radius:8px;font-size:13.5px;background:var(--surface);color:var(--text);
+      transition:border-color .18s,background .25s;}
+    .form-grup select:focus,.form-grup input:focus,.form-grup textarea:focus{border-color:var(--accent);outline:none;}
+    .form-grup textarea{height:88px;resize:vertical;}
+    .btn{background:var(--accent);color:#fff;border:none;padding:9px 24px;border-radius:8px;
+      font-size:13.5px;font-weight:600;cursor:pointer;transition:background .18s,transform .1s;
+      text-decoration:none;display:inline-block;}
+    .btn:hover{background:var(--accent-hover);transform:translateY(-1px);}
+    .btn-ikincil{background:var(--surface2);color:var(--text);border:1px solid var(--border);
+      padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;
+      text-decoration:none;display:inline-block;transition:all .18s;}
+    .btn-ikincil:hover{border-color:var(--accent);color:var(--accent);}
+    .uyari{background:rgba(233,69,96,0.1);color:var(--accent);padding:11px 15px;
+      border-radius:8px;border:1px solid rgba(233,69,96,0.3);margin-bottom:14px;font-size:13.5px;}
+    .urun-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:15px;}
+    .urun-kart{background:var(--surface);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);
+      border:1px solid var(--border);transition:transform .2s,box-shadow .2s;position:relative;}
+    .urun-kart:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);}
+    .urun-kart img{width:100%;height:180px;object-fit:cover;}
+    .urun-kart-bilgi{padding:12px;}
+    .urun-kart-bilgi h3{font-size:12.5px;color:var(--text);margin:7px 0 5px;line-height:1.35;font-weight:600;}
+    .sil-btn{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.55);color:#fff;
+      border:none;width:26px;height:26px;border-radius:50%;font-size:13px;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+    .urun-kart:hover .sil-btn{opacity:1;}
+    .badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:10.5px;font-weight:600;}
+    .badge-kategori{background:var(--badge-k-bg);color:var(--badge-k-text);}
+    .badge-magaza{background:var(--badge-m-bg);color:var(--badge-m-text);margin-left:3px;}
+    .fiyat{font-size:17px;font-weight:800;color:var(--accent);margin:6px 0 3px;}
+    .stok-bilgi{font-size:11.5px;color:var(--text-muted);}
+    .stok-bilgi.az{color:var(--accent);font-weight:600;}
+    .magaza-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:15px;}
+    .magaza-kart{background:var(--surface);border-radius:14px;padding:18px;box-shadow:var(--shadow);
+      border:1px solid var(--border);border-top:3px solid var(--accent);
+      transition:transform .2s,box-shadow .2s;text-decoration:none;color:var(--text);display:block;}
+    .magaza-kart:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover);}
+    .magaza-kart h3{font-size:14px;font-weight:700;margin-bottom:4px;}
+    .magaza-kart .sehir{color:var(--text-muted);font-size:12px;margin-bottom:10px;}
+    .yildiz{color:#f4a261;font-size:15px;letter-spacing:2px;}
+    .puan-bilgi{font-size:11px;color:var(--text-muted);margin-top:3px;}
+    .magaza-kart .urun-sayisi{margin-top:10px;font-size:11px;color:var(--text-muted);
+      background:var(--surface2);padding:4px 10px;border-radius:20px;display:inline-block;border:1px solid var(--border);}
+    .yorum-grid{display:flex;flex-direction:column;gap:11px;}
+    .yorum-kart{background:var(--surface);border-radius:10px;padding:14px 18px;
+      box-shadow:var(--shadow);border:1px solid var(--border);border-left:3px solid var(--accent);}
+    .yorum-kart .ust{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+    .yorum-kart .urun-adi{font-weight:700;color:var(--text);font-size:13.5px;}
+    .yorum-yildiz{color:#f4a261;font-size:14px;}
+    .yorum-kart .musteri{color:var(--text-muted);font-size:12px;margin-bottom:7px;}
+    .yorum-kart .metin{color:var(--text);font-size:13px;line-height:1.5;}
+    .yorum-kart .tarih{color:var(--text-muted);font-size:11px;margin-top:7px;}
+    .durum{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+    .durum-teslim{background:rgba(45,106,79,0.12);color:#2d6a4f;}
+    .durum-kargoda{background:rgba(0,119,182,0.12);color:#0077b6;}
+    .durum-hazirlaniyor{background:rgba(244,162,97,0.15);color:#d4730a;}
+    .durum-iptal{background:var(--surface2);color:var(--text-muted);}
+    .stok-sayisi{color:var(--accent);font-weight:700;}
+    .magaza-detay-header{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;
+      border-radius:14px;padding:24px 28px;margin-bottom:18px;
+      display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow);}
+    .magaza-detay-header h2{color:#fff;margin:0;}
+    .magaza-detay-header h2::before{background:var(--accent);}
+    .magaza-istatistik{display:flex;gap:20px;}
+    .magaza-istatistik .stat .deger{font-size:21px;font-weight:800;color:var(--accent);}
+    .magaza-istatistik .stat .ad{font-size:11px;color:#aaa;margin-top:2px;}
+    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+    footer{text-align:center;padding:16px;color:var(--text-muted);font-size:11px;margin-top:6px;}
+  </style>
+</head>
+<body>
+<div class="topbar">
+  <a href="/" class="logo">🛍️ mi<span class="y">y</span><span class="shop">shop</span></a>
+  <form class="arama-form" action="/ara" method="get">
+    <input type="text" name="q" placeholder="🔍 Ürün veya müşteri ara..." autocomplete="off">
+  </form>
+  <div class="topbar-sag">
+    <button class="tema-btn" id="tema-btn" title="Tema değiştir">🌙</button>
+  </div>
+</div>
+<div class="sidebar">
+  <div class="sidebar-menu">
+    <div class="menu-baslik">Genel</div>
+    <a href="/"><span class="ikon">🏠</span> Ana Sayfa</a>
+    <a href="/urunler"><span class="ikon">📦</span> Ürünler</a>
+    <a href="/urun-ekle"><span class="ikon">➕</span> Ürün Ekle</a>
+    <a href="/magazalar"><span class="ikon">🏪</span> Mağazalar</a>
+    <a href="/musteriler"><span class="ikon">👥</span> Müşteriler</a>
+    <a href="/yorumlar"><span class="ikon">💬</span> Yorumlar</a>
+    <div class="ayrac"></div>
+    <div class="menu-baslik">Sipariş</div>
+    <a href="/siparis-ekle"><span class="ikon">🛒</span> Sipariş Ekle</a>
+    <a href="/siparis-ozeti"><span class="ikon">📋</span> Sipariş Özeti</a>
+    <div class="ayrac"></div>
+    <div class="menu-baslik">Analiz</div>
+    <a href="/raporlar"><span class="ikon">📊</span> Raporlar</a>
+    <a href="/kritik-stok"><span class="ikon">⚠️</span> Kritik Stok</a>
+    <a href="/yorum-ekle"><span class="ikon">✏️</span> Yorum Ekle</a>
+  </div>
+  <div class="sidebar-alt">Mustafa Yiğit Genç<br>İbrahim Akkuş</div>
+</div>
+<div class="page-wrap">
+  {% block content %}{% endblock %}
+  <footer>miyshop © 2026 — TBL331 Veritabanı Yönetim Sistemleri</footer>
+</div>
+<script>
+  const btn=document.getElementById('tema-btn'),html=document.documentElement;
+  const saved=localStorage.getItem('miyshop-tema')||'light';
+  html.setAttribute('data-theme',saved);
+  btn.textContent=saved==='dark'?'☀️':'🌙';
+  btn.addEventListener('click',()=>{
+    const next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+    html.setAttribute('data-theme',next);
+    localStorage.setItem('miyshop-tema',next);
+    btn.textContent=next==='dark'?'☀️':'🌙';
+  });
+  document.querySelectorAll('.sidebar a').forEach(l=>{
+    if(l.getAttribute('href')===window.location.pathname)l.classList.add('aktif');
+  });
+</script>
+</body>
+</html>

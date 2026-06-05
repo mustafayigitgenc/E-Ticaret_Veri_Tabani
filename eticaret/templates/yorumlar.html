@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <h2 style="margin:0;">Ürün Yorumları</h2>
+    <a href="/yorum-ekle" class="btn" style="text-decoration:none;padding:9px 20px;font-size:13px;">+ Yorum Ekle</a>
+  </div>
+  <div class="yorum-grid">
+    {% for y in yorumlar %}
+    <div class="yorum-kart">
+      <div class="ust">
+        <span class="urun-adi">{{ y.Urun }}</span>
+        <span class="yorum-yildiz">{{ '★' * y.Puan }}{{ '☆' * (5 - y.Puan) }}</span>
+      </div>
+      <div class="musteri">👤 {{ y.Musteri }}</div>
+      <div class="metin">{{ y.Metin }}</div>
+      <div class="tarih">📅 {{ y.Tarih }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

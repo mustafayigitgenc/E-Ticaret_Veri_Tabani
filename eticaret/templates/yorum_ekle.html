@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart" style="max-width:560px;">
+  <h2>Yorum Ekle</h2>
+  {% if mesaj %}<div class="uyari">{{ mesaj }}</div>{% endif %}
+  <form method="post">
+    <div class="form-grup">
+      <label>Ürün</label>
+      <select name="urun_id">
+        {% for u in urunler %}
+        <option value="{{ u.UrunID }}">{{ u.Ad }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-grup">
+      <label>Müşteri</label>
+      <select name="musteri_id">
+        {% for m in musteriler %}
+        <option value="{{ m.MusteriID }}">{{ m.Ad }} {{ m.Soyad }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-grup">
+      <label>Puan</label>
+      <select name="puan">
+        <option value="5">★★★★★  Mükemmel (5)</option>
+        <option value="4">★★★★☆  İyi (4)</option>
+        <option value="3">★★★☆☆  Orta (3)</option>
+        <option value="2">★★☆☆☆  Kötü (2)</option>
+        <option value="1">★☆☆☆☆  Çok Kötü (1)</option>
+      </select>
+    </div>
+    <div class="form-grup">
+      <label>Yorum</label>
+      <textarea name="metin" placeholder="Ürün hakkındaki düşünceleriniz..."></textarea>
+    </div>
+    <button type="submit" class="btn">Yorumu Kaydet</button>
+    <a href="/yorumlar" class="btn-ikincil" style="margin-left:10px;">İptal</a>
+  </form>
+</div>
+{% endblock %}

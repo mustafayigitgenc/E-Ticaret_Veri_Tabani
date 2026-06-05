@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart" style="max-width:520px;">
+  <h2>Yeni Ürün Ekle</h2>
+  {% if mesaj %}<div class="uyari">{{ mesaj }}</div>{% endif %}
+  <form method="post">
+    <div class="form-grup">
+      <label>Ürün Adı</label>
+      <input type="text" name="ad" placeholder="Örn: Nike Air Max 270" required>
+    </div>
+    <div class="form-grup">
+      <label>Fiyat (₺)</label>
+      <input type="number" name="fiyat" step="0.01" min="0.01" placeholder="0.00" required style="max-width:180px;">
+    </div>
+    <div class="form-grup">
+      <label>Başlangıç Stoğu</label>
+      <input type="number" name="stok" min="0" value="0" style="max-width:130px;">
+    </div>
+    <div class="form-grup">
+      <label>Kategori</label>
+      <select name="kategori_id" required>
+        {% for k in kategoriler %}
+        <option value="{{ k.KategoriID }}">{{ k.Ad }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-grup">
+      <label>Mağaza</label>
+      <select name="magaza_id" required>
+        {% for m in magazalar %}
+        <option value="{{ m.MagazaID }}">{{ m.Ad }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-grup">
+      <label>Görsel URL <span style="font-weight:400;text-transform:none;">(boş bırakılabilir)</span></label>
+      <input type="text" name="gorsel" placeholder="https://...">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:6px;">
+      <button type="submit" class="btn">Ürünü Kaydet</button>
+      <a href="/urunler" class="btn-ikincil">İptal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

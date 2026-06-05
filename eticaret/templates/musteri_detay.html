@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart" style="margin-bottom:20px;">
+  <h2>{{ musteri.Ad }} {{ musteri.Soyad }}</h2>
+  <p style="color:#888;margin-top:-10px;margin-bottom:0;font-size:14px;">
+    📧 {{ musteri.Email }} &nbsp;|&nbsp; 📅 Kayıt: {{ musteri.KayitTarihi }}
+  </p>
+</div>
+
+<div class="kart">
+  <h2>Sipariş Geçmişi</h2>
+  {% if siparisler %}
+  <table>
+    <thead>
+      <tr><th>Sipariş No</th><th>Tarih</th><th>Tutar</th></tr>
+    </thead>
+    <tbody>
+      {% for s in siparisler %}
+      <tr>
+        <td><b>#{{ s.SiparisID }}</b></td>
+        <td>{{ s.SiparisTarihi }}</td>
+        <td><b style="color:#e94560;">{{ "%.2f"|format(s.SiparisTutari) }} ₺</b></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p style="margin-top:14px;font-size:14px;color:#555;">
+    <b>Toplam harcama:</b>
+    <span style="color:#e94560;font-size:18px;font-weight:700;">
+      {{ "%.2f"|format(siparisler|sum(attribute='SiparisTutari')) }} ₺
+    </span>
+  </p>
+  {% else %}
+  <p style="color:#999;">Bu müşteriye ait sipariş bulunamadı.</p>
+  {% endif %}
+  <div style="margin-top:16px;">
+    <a href="/musteriler" class="btn-ikincil">← Müşteri Listesi</a>
+  </div>
+</div>
+{% endblock %}

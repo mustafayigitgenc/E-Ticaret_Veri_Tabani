@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart" style="max-width:540px;">
+  <h2>Yeni Sipariş</h2>
+  {% if mesaj %}<div class="uyari">{{ mesaj }}</div>{% endif %}
+  <form method="post">
+    <div class="form-grup">
+      <label>Müşteri</label>
+      <select name="musteri_id">
+        {% for m in musteriler %}
+        <option value="{{ m.MusteriID }}">{{ m.Ad }} {{ m.Soyad }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-grup">
+      <label>Ürün</label>
+      <select name="urun_id" id="urun_id">
+        {% for u in urunler %}
+        <option value="{{ u.UrunID }}">{{ u.Ad }} — {{ u.Fiyat }} ₺</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Varyant seçimi: ürün değişince JS otomatik günceller -->
+    <div class="form-grup" id="varyant-div" style="display:none;">
+      <label>Seçenek</label>
+      <select name="varyant_id" id="varyant_id">
+      </select>
+      <div style="font-size:12px;color:#888;margin-top:4px;">Beden / Renk / Tür seçin</div>
+    </div>
+
+    <div class="form-grup">
+      <label>Adet</label>
+      <input type="number" name="adet" value="1" min="1" style="max-width:110px;">
+    </div>
+    <button type="submit" class="btn">Siparişi Kaydet</button>
+  </form>
+</div>
+
+<script>
+const varyantlar = {{ varyantlar_json|safe }};
+
+function varyantiGuncelle() {
+  const uid = document.getElementById('urun_id').value;
+  const div = document.getElementById('varyant-div');
+  const sel = document.getElementById('varyant_id');
+  sel.innerHTML = '';
+  if (varyantlar[uid] && varyantlar[uid].length > 0) {
+    div.style.display = 'block';
+    varyantlar[uid].forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v.id;
+      opt.text = v.label + '  (Stok: ' + v.stok + ')';
+      sel.appendChild(opt);
+    });
+  } else {
+    div.style.display = 'none';
+  }
+}
+
+document.getElementById('urun_id').addEventListener('change', varyantiGuncelle);
+varyantiGuncelle();
+</script>
+{% endblock %}

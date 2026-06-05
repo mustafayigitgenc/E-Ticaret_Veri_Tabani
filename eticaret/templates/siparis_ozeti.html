@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+    <h2 style="margin:0;">Sipariş Özeti</h2>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      {% for durum, label in [('','Tümü'),('Hazirlaniyor','Hazırlanıyor'),('Kargoda','Kargoda'),('Teslim','Teslim'),('Iptal','İptal')] %}
+      <a href="/siparis-ozeti{% if durum %}?durum={{ durum }}{% endif %}"
+         style="padding:6px 13px;border-radius:20px;font-size:12px;font-weight:600;text-decoration:none;
+                background:{% if durum_filtre == durum %}var(--accent){% else %}var(--surface2){% endif %};
+                color:{% if durum_filtre == durum %}#fff{% else %}var(--text-muted){% endif %};
+                border:1px solid var(--border);">
+        {{ label }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  <table>
+    <thead>
+      <tr><th>No</th><th>Müşteri</th><th>Tarih</th><th>Ürün</th><th>Seçenek</th>
+          <th>Adet</th><th>Birim</th><th>Tutar</th><th>Durum</th><th>İşlem</th></tr>
+    </thead>
+    <tbody>
+      {% for s in ozet %}
+      <tr>
+        <td><a href="/siparis-detay/{{ s.SiparisID }}" style="color:var(--accent);font-weight:700;text-decoration:none;">#{{ s.SiparisID }}</a></td>
+        <td>{{ s.Musteri }}</td>
+        <td>{{ s.SiparisTarihi }}</td>
+        <td>{{ s.Urun }}</td>
+        <td style="color:var(--text-muted);font-size:12px;">{{ s.Varyant if s.Varyant else '—' }}</td>
+        <td>{{ s.Adet }}</td>
+        <td>{{ s.BirimFiyat }} ₺</td>
+        <td><b>{{ s.SatirTutar }} ₺</b></td>
+        <td>
+          {% if s.Durum == 'Teslim' %}<span class="durum durum-teslim">✅ Teslim</span>
+          {% elif s.Durum == 'Kargoda' %}<span class="durum durum-kargoda">🚚 Kargoda</span>
+          {% elif s.Durum == 'Hazirlaniyor' %}<span class="durum durum-hazirlaniyor">⏳ Hazırlanıyor</span>
+          {% else %}<span class="durum durum-iptal">❌ İptal</span>{% endif %}
+        </td>
+        <td style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+          {% if s.Durum == 'Hazirlaniyor' %}
+            <a href="/siparis-ilerlet/{{ s.SiparisID }}" style="color:#0077b6;font-size:12px;text-decoration:none;font-weight:600;">Kargoya Ver</a>
+            <a href="/siparis-iptal/{{ s.SiparisID }}" style="color:var(--accent);font-size:12px;text-decoration:none;">İptal</a>
+          {% elif s.Durum == 'Kargoda' %}
+            <a href="/siparis-ilerlet/{{ s.SiparisID }}" style="color:#2d6a4f;font-size:12px;text-decoration:none;font-weight:600;">Teslim Et</a>
+            <a href="/siparis-iptal/{{ s.SiparisID }}" style="color:var(--accent);font-size:12px;text-decoration:none;">İptal</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+      {% if not ozet %}
+      <tr><td colspan="10" style="text-align:center;color:var(--text-muted);padding:30px;">Bu filtrede sipariş bulunamadı.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

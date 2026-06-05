@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart">
+  <h2>Genel Bakış</h2>
+  <div class="ozet-grid">
+    <div class="ozet-kart" style="border-left:4px solid #0077b6">
+      <div class="sayi">{{ toplam_urun }}</div><div class="etiket">📦 Toplam Ürün</div>
+    </div>
+    <div class="ozet-kart" style="border-left:4px solid #2d6a4f">
+      <div class="sayi">{{ toplam_musteri }}</div><div class="etiket">👤 Kayıtlı Müşteri</div>
+    </div>
+    <div class="ozet-kart" style="border-left:4px solid #e94560">
+      <div class="sayi">{{ toplam_siparis }}</div><div class="etiket">🛒 Toplam Sipariş</div>
+    </div>
+    <div class="ozet-kart" style="border-left:4px solid #f4a261">
+      <div class="sayi">{{ "%.0f"|format(toplam_ciro) }} ₺</div><div class="etiket">💰 Toplam Ciro</div>
+    </div>
+    <div class="ozet-kart" style="border-left:4px solid #6a0572">
+      <div class="sayi">{{ toplam_yorum }}</div><div class="etiket">💬 Toplam Yorum</div>
+    </div>
+    <div class="ozet-kart" style="border-left:4px solid {% if kritik_stok > 0 %}#e94560{% else %}#2d6a4f{% endif %}">
+      <div class="sayi">{{ kritik_stok }}</div><div class="etiket">⚠️ Kritik Stok</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

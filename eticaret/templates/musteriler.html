@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart">
+  <h2>Müşteriler</h2>
+  <table>
+    <thead>
+      <tr><th>No</th><th>Ad Soyad</th><th>E-posta</th><th>Kayıt Tarihi</th><th>Sipariş</th><th>Toplam Harcama</th><th>Detay</th></tr>
+    </thead>
+    <tbody>
+      {% for m in musteriler %}
+      <tr>
+        <td>{{ m.MusteriID }}</td>
+        <td><b>{{ m.Ad }} {{ m.Soyad }}</b></td>
+        <td style="color:#888;font-size:13px;">{{ m.Email }}</td>
+        <td>{{ m.KayitTarihi }}</td>
+        <td><span class="badge" style="background:#e8ecf7;color:#1a1a2e;">{{ m.SiparisSayisi }}</span></td>
+        <td><b style="color:#e94560;">{{ "%.2f"|format(m.ToplamHarcama) }} ₺</b></td>
+        <td><a href="/musteri/{{ m.MusteriID }}" class="btn-ikincil">Görüntüle</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

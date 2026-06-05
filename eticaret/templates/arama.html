@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart" style="margin-bottom:18px;">
+  <h2>"{{ q }}" için arama sonuçları</h2>
+  <p style="color:var(--text-muted);font-size:13px;margin-top:-10px;">
+    {{ urunler|length }} ürün, {{ musteriler|length }} müşteri bulundu
+  </p>
+</div>
+
+{% if urunler %}
+<div class="kart" style="margin-bottom:18px;">
+  <h2>Ürünler</h2>
+  <div class="urun-grid">
+    {% for u in urunler %}
+    <div class="urun-kart">
+      <img src="{{ u.GorselURL }}" alt="{{ u.Ad }}">
+      <div class="urun-kart-bilgi">
+        <span class="badge badge-kategori">{{ u.Kategori }}</span>
+        <h3>{{ u.Ad }}</h3>
+        <div class="fiyat">{{ u.Fiyat }} ₺</div>
+        <div class="stok-bilgi {% if u.StokAdedi < 10 %}az{% endif %}">Stok: {{ u.StokAdedi }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if musteriler %}
+<div class="kart">
+  <h2>Müşteriler</h2>
+  <table>
+    <thead><tr><th>Ad Soyad</th><th>E-posta</th><th>Sipariş</th><th>Detay</th></tr></thead>
+    <tbody>
+      {% for m in musteriler %}
+      <tr>
+        <td><b>{{ m.Ad }} {{ m.Soyad }}</b></td>
+        <td style="color:var(--text-muted);font-size:12px;">{{ m.Email }}</td>
+        <td>{{ m.SiparisSayisi }}</td>
+        <td><a href="/musteri/{{ m.MusteriID }}" class="btn-ikincil" style="font-size:12px;padding:5px 12px;">Görüntüle</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% if not urunler and not musteriler %}
+<div class="kart" style="text-align:center;padding:40px;">
+  <p style="font-size:40px;margin-bottom:12px;">🔍</p>
+  <p style="color:var(--text-muted);">"{{ q }}" ile eşleşen sonuç bulunamadı.</p>
+</div>
+{% endif %}
+{% endblock %}

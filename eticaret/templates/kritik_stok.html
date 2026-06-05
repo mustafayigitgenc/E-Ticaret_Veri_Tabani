@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kart">
+  <h2>Kritik Stok — 10 Altı Ürünler</h2>
+  <table>
+    <thead>
+      <tr><th>No</th><th>Ürün Adı</th><th>Stok</th><th>Kategori</th></tr>
+    </thead>
+    <tbody>
+      {% for k in kritik %}
+      <tr>
+        <td>{{ k.UrunID }}</td>
+        <td>{{ k.Ad }}</td>
+        <td class="stok-sayisi">⚠️ {{ k.StokAdedi }}</td>
+        <td>{{ k.Kategori }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

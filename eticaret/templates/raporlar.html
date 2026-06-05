@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Genel Özet -->
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:20px;">
+  <div class="ozet-kart" style="border-left:4px solid #e94560">
+    <div class="sayi">{{ "%.0f"|format(toplam_ciro) }} ₺</div>
+    <div class="etiket">💰 Toplam Ciro</div>
+  </div>
+  <div class="ozet-kart" style="border-left:4px solid #0077b6">
+    <div class="sayi">{{ toplam_siparis }}</div>
+    <div class="etiket">🛒 Tamamlanan Sipariş</div>
+  </div>
+  <div class="ozet-kart" style="border-left:4px solid #2d6a4f">
+    <div class="sayi">{{ toplam_adet }}</div>
+    <div class="etiket">📦 Satılan Ürün Adedi</div>
+  </div>
+  <div class="ozet-kart" style="border-left:4px solid #6a0572">
+    <div class="sayi">{{ ort_siparis }} ₺</div>
+    <div class="etiket">📊 Ortalama Sepet</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;">
+
+  <!-- Kategoriye Göre Ciro (sp_SatisRaporu) -->
+  <div class="kart">
+    <h2>Kategoriye Göre Satış</h2>
+    <p style="font-size:11px;color:var(--text-muted);margin-top:-12px;margin-bottom:14px;">sp_SatisRaporu procedure çıktısı</p>
+    <table>
+      <thead><tr><th>Kategori</th><th>Sipariş</th><th>Adet</th><th>Ciro</th></tr></thead>
+      <tbody>
+        {% for r in kategori_raporu %}
+        <tr>
+          <td><b>{{ r.Kategori }}</b></td>
+          <td>{{ r.SiparisSayisi }}</td>
+          <td>{{ r.ToplamAdet }}</td>
+          <td style="color:var(--accent);font-weight:700;">{{ "%.2f"|format(r.ToplamCiro) }} ₺</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- En Çok Satan 5 Ürün -->
+  <div class="kart">
+    <h2>En Çok Satan Ürünler</h2>
+    <p style="font-size:11px;color:var(--text-muted);margin-top:-12px;margin-bottom:14px;">vw_SatisDetaylari view'ından</p>
+    <table>
+      <thead><tr><th>Sıra</th><th>Ürün</th><th>Adet</th><th>Ciro</th></tr></thead>
+      <tbody>
+        {% for i, u in top_urunler %}
+        <tr>
+          <td>
+            {% if i == 1 %}<span style="font-size:18px;">🥇</span>
+            {% elif i == 2 %}<span style="font-size:18px;">🥈</span>
+            {% elif i == 3 %}<span style="font-size:18px;">🥉</span>
+            {% else %}<b style="color:var(--text-muted);">{{ i }}.</b>{% endif %}
+          </td>
+          <td style="font-size:12.5px;">{{ u.Urun }}</td>
+          <td>{{ u.ToplamAdet }}</td>
+          <td style="color:var(--accent);font-weight:700;">{{ "%.2f"|format(u.ToplamCiro) }} ₺</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- Mağaza Performansı -->
+<div class="kart">
+  <h2>Mağaza Performansı</h2>
+  <table>
+    <thead><tr><th>Mağaza</th><th>Şehir</th><th>Toplam Sipariş</th><th>Toplam Ciro</th><th>Performans</th></tr></thead>
+    <tbody>
+      {% set max_ciro = magaza_raporu[0].MagazaCiro if magaza_raporu else 1 %}
+      {% for mg in magaza_raporu %}
+      <tr>
+        <td><b>{{ mg.Magaza }}</b></td>
+        <td style="color:var(--text-muted);font-size:12px;">{{ mg.Sehir }}</td>
+        <td>{{ mg.MagazaSiparis }}</td>
+        <td style="color:var(--accent);font-weight:700;">{{ "%.2f"|format(mg.MagazaCiro) }} ₺</td>
+        <td style="min-width:140px;">
+          <div style="background:var(--surface2);border-radius:20px;height:8px;overflow:hidden;border:1px solid var(--border);">
+            <div style="background:var(--accent);height:100%;border-radius:20px;
+                        width:{{ [((mg.MagazaCiro / max_ciro) * 100)|int, 100]|min }}%;
+                        transition:width .5s;"></div>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
