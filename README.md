@@ -1,7 +1,7 @@
 # miyshop — E-Ticaret Veritabanı Sistemi
 
-**Grup:** 241307022 Mustafa Yiğit Genç — 241307056 İbrahim Akkuş  
-**Ders:** TBL331 Veritabanı Yönetim Sistemleri (2025-2026 Bahar)  
+**GrupNo: 133** 241307022 Mustafa Yiğit Genç — 241307056 İbrahim Akkuş  
+**Ders:** Veritabanı Yönetim Sistemleri (2025-2026 Bahar)  
 **Geliştirme Ortamı:** Microsoft SQL Server 2022 + SSMS + Python 3.12 + Flask 3.1
 
 ---
@@ -16,6 +16,7 @@ Bir e-ticaret platformunun temel iş süreçlerini yönetecek ilişkisel bir ver
 - İptal durumunda stoğun **otomatik** iade edilmesi
 - Ürünlerin beden/renk gibi varyantlarının ayrı stok ile yönetilmesi
 - Kategoriye göre satış raporu, kritik stok uyarısı ve müşteri bazlı sipariş geçmişi sorgularının verimli çalışması
+- -Müşteri deneyimini şeffaf şekilde yansıtmak amacıyla ürünlere derecelendirmeli (1-5 puan) yorum yapılabilmesi ve bu verilerin sipariş geçmişiyle ilişkili tutulması.
 
 ---
 
@@ -182,7 +183,7 @@ erDiagram
 pip install flask pyodbc
 ```
 
-1. SSMS'te `GRUPNO_sql_betikleri.txt` dosyasını baştan sona çalıştırın (CREATE DATABASE dahil)
+1. SSMS'te `eticaret_sql_betikleri.sql` dosyasını baştan sona çalıştırın (CREATE DATABASE dahil)
 2. `eticaret/` klasöründe `python app.py` çalıştırın
 3. Tarayıcıda `http://127.0.0.1:5000` adresini açın
 
@@ -205,3 +206,5 @@ pip install flask pyodbc
 [7] Flask Documentation. *Quickstart*. https://flask.palletsprojects.com/en/stable/quickstart/
 
 [8] Codd, E. F. (1970). *A Relational Model of Data for Large Shared Data Banks*. Communications of the ACM, 13(6), 377–387.
+
+[9] Yapay Zeka Araçları (Chatgpt, Gemini, Claude).
