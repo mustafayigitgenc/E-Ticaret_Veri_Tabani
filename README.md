@@ -30,25 +30,31 @@ Bir e-ticaret platformunun temel iş süreçlerini yönetecek ilişkisel bir ver
 - **pyodbc stored procedure çağrısı:** Procedure sonrasında kalan result set'lerin `cursor.nextset()` ile temizlenmesi gerektiği test aşamasında tespit edilerek düzeltildi [4].
 
 ---
-
 ## Akış Şeması
 
 ```mermaid
 flowchart TD
-    A([Kullanıcı]) --> B[Ürün Listeleme\nKategori Filtresi / Arama]
-    B --> C{Üründe Varyant\nTanımlı mı?}
-    C -- Evet --> D[Varyant Seçimi\nBeden / Renk / Tür]
-    C -- Hayır --> E[Adet Girişi]
+    A([Kullanici]) --> B[Urun Listeleme]
+    B --> C{Varyant Tanimli mi?}
+    C -- Evet --> D[Varyant Secimi]
+    C -- Hayir --> E[Adet Girisi]
     D --> E
-    E --> F{Stok\nYeterli mi?}
-    F -- Hayır --> G[Hata Mesajı\nYetersiz Stok]
+    E --> F{Stok Yeterli mi?}
+    F -- Hayir --> G[Yetersiz Stok Hatasi]
     F -- Evet --> H[INSERT INTO Siparis]
     H --> I[INSERT INTO SiparisDetay]
-    I --> J[[Trigger: trg_StokDus]]
-    J --> K
-
----
-
+    I --> J[[trg_StokDus Tetiklenir]]
+    J --> K[Urun ve Varyant Stoku Guncellenir]
+    K --> L{Durum Guncelleme}
+    L -- Hazirlaniyor --> M[UPDATE Durum = Kargoda]
+    M --> N[UPDATE Durum = Teslim]
+    L -- Iptal --> O[[trg_IptalStokGeri Tetiklenir]]
+    O --> P[Stok Iade Edilir]
+    N --> Q[Raporlama]
+    Q --> R[[sp_SatisRaporu]]
+    Q --> S[[sp_SepetToplami]]
+    Q --> T[[vw_SatisDetaylari]]
+```
 ## Yazılım Mimarisi
 
 ```
