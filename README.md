@@ -164,7 +164,24 @@ erDiagram
     Siparis ||--o{ SiparisDetay : "içerir"
     UrunVaryant |o--o{ SiparisDetay : "seçilir"
 ```
+### Tablo İlişkileri
 
+#### Bire-Çok (1:N) İlişkiler
+
+| İlişki | Açıklama |
+|--------|----------|
+| `Kategori` → `Urun` | Bir kategori birden fazla ürünü kapsar; bir ürün yalnızca tek bir kategoride yer alır. `Urun.KategoriID` FK ile sağlanır. |
+| `Magaza` → `Urun` | Bir mağaza birden fazla ürün satar; her ürün tek bir mağazaya aittir. `Urun.MagazaID` FK ile sağlanır. |
+| `Urun` → `UrunVaryant` | Bir ürünün birden fazla varyantı (beden/renk) olabilir; her varyant yalnızca bir ürüne aittir. |
+| `Musteri` → `Siparis` | Bir müşterinin birden fazla siparişi olabilir; her sipariş tek bir müşteriye aittir. `Siparis.MusteriID` FK ile sağlanır. |
+| `Siparis` → `SiparisDetay` | Bir sipariş birden fazla kalem içerebilir; her kalem tek bir siparişe aittir. |
+| `Urun` → `Yorum` | Bir ürün birden fazla yorum alabilir; her yorum tek bir ürüne aittir. |
+| `Musteri` → `Yorum` | Bir müşteri birden fazla yorum yazabilir; her yorum tek bir müşteriye aittir. |
+
+#### Çoka-Çok (N:N) İlişki ve Çözümü
+
+**Sipariş ↔ Ürün** ilişkisi doğası gereği çoka-çoktur:
+- Bir sipariş → birden fazla ürün içerebilir
 ---
 
 ## Genel Yapı
